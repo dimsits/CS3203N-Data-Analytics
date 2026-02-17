@@ -1,0 +1,87 @@
+---
+title: "CG2CG2-ACTIVITY01"
+author: "CG2CG2"
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### PART 1: LOAD DATA
+```{r}
+setwd("C:/Users/sethd/Documents/CS3203N/CG2CG2_ACT1")
+
+library(dplyr)
+
+edata <- read.csv("employee_data.csv")
+
+edata
+head(edata)
+
+colSums(is.na(edata))
+edata %>% filter(is.na(Performance))
+```
+Based on the first six rows of the dataset, the *Performance* variable contains two missing values (NA).
+
+### PART 2: SELECT AND FILTER
+
+#### Part 2(a): Select Name, Department, Salary
+```{r}
+edata_sel <- edata %>% select(Name, Department, Salary)
+edata_sel
+
+edata_sel_base <- data.frame(
+  Name = edata$Name,
+  Department = edata$Department,
+  Salary = edata$Salary
+)
+edata_sel_base
+```
+#### Part 2(b): Filter Salary > 55,000
+```{r}
+edata_high_salary <- edata %>% filter(Salary > 55000)
+edata_high_salary
+```
+### PART 3: MUTATE AND ARRANGE
+#### Part 3(a): Create Seniority column
+```{r}
+edata_senior <- edata %>% mutate(Seniority = YearsWorked > 5)
+edata_senior
+```
+#### Part 3(b): Arrange by Performance (descending)
+```{r}
+edata_sorted_perf <- edata %>% arrange(desc(Performance))
+edata_sorted_perf
+```
+#### Part 3(c): Describe the last output
+Employees are sorted from highest to lowest performance rating.
+Rows with missing performance values appear at the bottom.
+
+### PART 4: GROUPED OPERATIONS
+#### Part 4(a): Average salary by Department
+```{r}
+dept_avg_salary <- edata %>%
+  group_by(Department) %>%
+  summarise(MeanSalary = mean(Salary), .groups = "drop")
+dept_avg_salary
+
+aggregate(Salary ~ Department, data = edata, mean)
+```
+#### Part 4(b): Count employees per Department
+```{r}
+dept_counts <- edata %>%
+  group_by(Department) %>%
+  summarise(EmployeeCount = n(), .groups = "drop")
+dept_counts
+```
+#### Part 4(c): Interpretation
+The IT department has the highest average salary.
+The IT and Sales departments have the most employees, with three employees each.
+
+
+
+
+
+
+
