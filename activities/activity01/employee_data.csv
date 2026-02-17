@@ -1,0 +1,9 @@
+EmployeeID,Name,Department,Salary,YearsWorked,Performance
+101,Ana,Sales,55000,6,4.0
+102,Ben,IT,62000,4,5.0
+103,Cory,HR,48000,5,
+104,Dina,IT,59000,3,3.0
+105,Eli,Sales,50000,7,5.0
+106,Faye,HR,47000,2,
+107,Gary,IT,63000,8,4.0
+108,Hana,Sales,51000,1,2.0
