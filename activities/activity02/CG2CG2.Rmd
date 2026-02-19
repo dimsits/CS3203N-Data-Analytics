@@ -1,0 +1,180 @@
+---
+title: "Activity 02"
+author: "CG2CG2"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+          latex_engine: xelatex
+---
+
+## Data Generation
+
+```{r setup, message=FALSE, warning=FALSE, echo=TRUE}
+# Set seed for reproducibility
+set.seed(22)
+
+# Generate dataset (60 observations)
+activity_data <- data.frame(
+  StudyHours  = rnorm(60, mean = 6,  sd = 2),
+  Attendance  = rnorm(60, mean = 85, sd = 8),
+  Score       = rnorm(60, mean = 78, sd = 7),
+  Gender      = sample(c("Male", "Female"), 60, replace = TRUE),
+  Group       = sample(c("Group 1", "Group 2", "Group 3"), 60, replace = TRUE)
+)
+
+activity_data$Gender <- factor(activity_data$Gender)
+activity_data$Group  <- factor(activity_data$Group)
+```
+
+---
+
+# A. Summary Statistics
+
+## A1. Compute Descriptive Statistics
+
+```{r}
+summary(activity_data)
+```
+
+## A2. Measure Variability
+
+```{r}
+sapply(activity_data[c("StudyHours","Attendance","Score")], sd)
+```
+
+## A3. Check Minimum and Maximum Values
+
+```{r}
+sapply(activity_data[c("StudyHours","Attendance","Score")], range)
+```
+
+### Interpretation
+
+- The average values of the numerical variables are:
+  - **StudyHours:** 6.249  
+  - **Attendance:** 84.22  
+  - **Score:** 76.69  
+
+- The variable with the greatest variability is:
+  - **Attendance**, as it has the highest standard deviation (7.87), indicating the widest spread of values.
+
+- Any unusual minimum or maximum values observed:
+  - Attendance has a maximum value of **101.97**, which slightly exceeds 100. This is possible because the data were generated using a normal distribution without upper bounds. No extreme outliers are observed in the other variables.
+
+
+---
+
+# B. Data Structure
+
+```{r}
+str(activity_data)
+```
+
+### Answers
+
+- The object class of `activity_data` is **data.frame**.
+- The dataset contains **60 observations and 5 variables**.
+- The variables are: StudyHours, Attendance, Score, Gender, and Group.
+- StudyHours, Attendance, and Score are **numeric variables**.
+- Gender and Group are **categorical variables (factors)**.
+
+---
+
+# C. Probability Estimation
+
+## Estimate Probability that Score > 85
+
+```{r}
+mean(activity_data$Score > 85)
+```
+
+### Interpretation
+
+It is empirical because it was calculated using the observed sample data rather than a theoretical probability formula based on the population distribution.
+
+---
+
+# D. Distribution of Scores
+
+```{r}
+hist(activity_data$Score,
+     main = "Histogram of Score",
+     xlab = "Score",
+     col = "lightblue",
+     border = "black")
+```
+
+### Interpretation
+
+- The histogram of Score appears approximately bell-shaped and reasonably symmetric, indicating that the distribution is roughly normal.
+- Yes, assuming a normal distribution is reasonable because the data were generated using a normal distribution (`rnorm`), and the observed shape aligns with that expectation.
+
+---
+
+# E. Expectation and Variance of Score
+
+Theoretical expectation (mean) = 78
+Theoretical variance = 49
+
+## Sample Estimates
+
+```{r}
+mean(activity_data$Score)
+var(activity_data$Score)
+```
+
+### Explanation
+
+The sample mean (76.69) and sample variance (39.66) differ from theoretical values because they are **estimates based on a finite sample**, not exact population parameters.
+
+---
+
+# F. Correlation Analysis
+
+```{r}
+cor(activity_data[c("StudyHours","Attendance","Score")])
+```
+
+### Interpretation
+
+- StudyHours and Attendance: **r = 0.061** → negligible positive relationship.
+- StudyHours and Score: **r = -0.065** → negligible negative relationship.
+- Attendance and Score: **r = 0.227** → low positive relationship.
+
+Overall, there are **no strong linear relationships** among the numerical variables.  
+Correlation does not imply causation.
+
+---
+
+# G. One-Way ANOVA (Score by Group)
+
+```{r}
+oneway.test(Score ~ Group, data = activity_data)
+```
+
+### Interpretation
+
+* p-value: 0.2379
+* Decision at α = 0.05: since p > 0.05, we **do not reject the null hypothesis**.
+* Conclusion: **no statistically significant difference** in mean Score among the three Groups.
+
+---
+
+# H. Chi-Square Test (Gender vs Group)
+
+```{r}
+tab <- table(activity_data$Gender, activity_data$Group)
+tab
+chisq.test(tab)
+```
+
+### Interpretation
+
+* p-value: 0.5258
+* Conclusion regarding association:
+- There is **no significant association** between Gender and Group.
+- Gender and Group appear to be independent in this dataset.
+
+
+
+
